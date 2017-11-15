@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        canvas {
+            background-color: #EF8CC0;
+            border: 3px solid #A9035B;
+            margin: auto;
+            position: absolute;
+            z-index: 1;
+            margin-top: 10%;
+            margin-bottom: 50%;
+            margin-left: 30%;
+            margin-right: 50%;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width=600 height=600></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // images
+        const xImage = new Image();
+        xImage.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/AS-skrzyzowanie-icon.svg/1024px-AS-skrzyzowanie-icon.svg.png";
+        const oImage = new Image();
+        oImage.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Letter_o.svg/600px-Letter_o.svg.png";
+
+
+        //board draw
+        const draw = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const drawLine = function (startX, startY, endX, endY) {
+                ctx.fillStyle = "#A9035B"
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+                ctx.strokeRect(startX, startY, endX, endY);
+            }
+            drawLine(0, 200, 600, 200);
+            drawLine(0, 400, 600, 400);
+            drawLine(200, 0, 200, 600);
+            drawLine(400, 0, 400, 600);
+
+
+        }
+
+
+        draw();
+
+
+
+    const board = [
+    [" ", " ", " "],
+    [" ", " ", " "],
+    [" ", " ", " "]
+
+    ]
+
+    const nextMove =function(board){
+        for (let y = 0;y<3; y++){
+            for(let x=0;x< 3;x++ ){
+                if(board[y][x]===" "){
+                    return [y,x];
+                }
+            }
+        }
+    };
+
+   
+    // location is the result of nextMove/[y,x]
+    const makeMove = function (board, location, isX) {
+        if ((location[0] === 0 || location[0] === 1 || location[0] === 2) && (location[1] === 0 || location[1] === 1 || location[1] === 2)) {
+           
+            if (isX === true) {
+                board[location[0]][location[1]]="x"
+
+            }
+            if (isX === false) {
+                board[location[0]][location[1]] = "o"
+            }
+            
+            return 1;
+        }
+        return -1;
+    }
+
+    const findWinner = function (board) {
+       
+        for (let i = 0; i < board.length; i++) {
+            if (board[i][0] !== '' && (board[i][0]===board[i][1] && board[i][2] === board[i][0])) {
+                return {
+                    winner: board[i][0],
+                    winningLocations: [[i, 0], [i, 1], [i, 2]]
+                };
+            }
+        }
+      
+        for (let i = 0; i < board.length; i++) {
+            if (board[0][i] !== " " && (board[0][i]===board[1][i] && board[2][i] === board[0][i])) {
+                return {
+                    winner: board[0][i],
+                    winningLocations: [[0, i], [1, i], [2, i]]
+                };
+            }
+        }
+        if (board[0][0] !== " " && (board[0][0]===board[1][1] && board[2][2] === board[0][0])) {
+            return {
+                winner: board[0][0],
+                winningLocations: [[0, 0], [1, 1], [2, 2]]
+            };
+        }
+        if (board[0][2] !== " " && (board[0][2]===board[1][1] && board[2][0] === board[0][2] )) {
+            return {
+                winner: board[0][2],
+                winningLocations: [[0, 2], [1, 1], [2, 0]]
+            };
+        }
+        for (let i = 0; i < board.length; i++){
+            for (let j = 0; j < board.length; j++){
+                if (board[i,j]!==" ") {
+                    return {
+                        winner: 'nobody'
+                    };
+                }
+            }
+        }
+       
+    }
+     
+
+    </script>
+
+
+
+
+</body>
+</html>
